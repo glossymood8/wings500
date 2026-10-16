@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claim your $500 Wingstop Gift Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2A8540;
+    --green-dark: #226D34;
+    --ink: #111111;
+    --slate: #3A4250;
+    --muted: #6B7280;
+    --stat-bg: #F4EFE6;
+    --stat-line: #E2DBCF;
+    --bg: #F3EFE8;
+    --card: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 56px 16px 40px; }
+
+  .card {
+    background: var(--card);
+    border-radius: 28px;
+    padding: 42px 32px 34px;
+    box-shadow: 0 14px 34px rgba(60,45,20,.10);
+  }
+
+  .brand {
+    text-align: center;
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    line-height: 1.05;
+    color: var(--green);
+  }
+  .label {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--slate);
+    margin-top: 4px;
+  }
+  .amount {
+    text-align: center;
+    font-size: 92px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-top: 10px;
+  }
+  .sub {
+    text-align: center;
+    font-size: 17px;
+    color: var(--muted);
+    margin-top: 16px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--stat-bg);
+    border-radius: 16px;
+    margin-top: 28px;
+    overflow: hidden;
+  }
+  .stats div {
+    text-align: center;
+    padding: 16px 6px;
+    border-left: 1px solid var(--stat-line);
+  }
+  .stats div:first-child { border-left: 0; }
+  .stats strong { display: block; font-size: 17px; font-weight: 700; }
+  .stats span {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .steps { list-style: none; margin-top: 28px; display: grid; gap: 20px; }
+  .steps li { display: flex; gap: 18px; align-items: flex-start; }
+  .steps .num {
+    flex: none;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    display: grid; place-items: center;
+  }
+  .steps strong { display: block; font-size: 18px; font-weight: 700; }
+  .steps li:nth-child(3) strong { text-decoration: underline; text-underline-offset: 3px; }
+  .steps span { display: block; font-size: 15px; color: var(--muted); }
+
+  .cta {
+    display: block;
+    margin-top: 32px;
+    padding: 22px;
+    border-radius: 999px;
+    background: var(--green);
+    color: #fff;
+    font-size: 21px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: background .15s, transform .1s;
+  }
+  .cta:hover { background: var(--green-dark); }
+  .cta:active { transform: scale(.98); }
+  .cta:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .cta::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent);
+    transform: skewX(-20deg);
+    animation: shine 3.2s ease-in-out infinite;
+  }
+  @keyframes shine { 0%, 60% { left: -60%; } 100% { left: 130%; } }
+
+  .note {
+    text-align: center;
+    font-size: 14.5px;
+    color: var(--slate);
+    margin-top: 16px;
+  }
+  .note strong { font-weight: 700; }
+
+  /* Live Feed */
+  .live-feed {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9999;
+    max-width: 320px;
+    width: calc(100% - 48px);
+  }
+  .live-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    border: 1px solid rgba(0,0,0,.06);
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: none;
+  }
+  .live-toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .live-toast.hide {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  .live-avatar {
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2A8540, #3a9c52);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    display: grid;
+    place-items: center;
+  }
+  .live-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .live-body strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .live-body span {
+    display: block;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .live-badge {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+  }
+
+  @media (max-width: 420px) {
+    .wrap { padding-top: 40px; }
+    .card { padding: 34px 22px 28px; }
+    .amount { font-size: 76px; }
+    .brand { font-size: 36px; }
+    .steps strong { font-size: 16.5px; }
+    .steps span { font-size: 14px; }
+    .cta { font-size: 19px; }
+    .live-feed { left: 12px; bottom: 16px; width: calc(100% - 24px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta::after { animation: none; display: none; }
+    .live-dot { animation: none; }
+    .live-toast { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="card">
+
+    <p class="brand">WINGSTOP</p>
+    <p class="label">Gift Card</p>
+    <p class="amount">$500</p>
+    <p class="sub">Credit to spend at Wingstop</p>
+
+    <div class="stats">
+      <div><strong>3–5</strong><span>Deals</span></div>
+      <div><strong>Easy</strong><span>To sign up</span></div>
+      <div><strong>Email</strong><span>Delivery</span></div>
+    </div>
+
+    <ol class="steps">
+      <li>
+        <div class="num">1</div>
+        <div><strong>Tap the button below</strong><span>Start your $500 reward offer</span></div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div><strong>Enter your email</strong><span>Just a valid address to get started</span></div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div><strong>Complete 3-5 recommended deals</strong><span>Trials &amp; offers to unlock the full $500</span></div>
+      </li>
+    </ol>
+
+    <a class="cta" href="https://linkthem.net/aff_c?offer_id=1541&aff_id=104785&source=NEWST" rel="nofollow sponsored">Claim My $500 →</a>
+    <p class="note">No credit card required</p>
+
+  </section>
+</main>
+
+<!-- Live Feed -->
+<div class="live-feed" id="liveFeed">
+  <div class="live-toast" id="liveToast">
+    <div class="live-avatar" id="liveAvatar">S</div>
+    <div class="live-body">
+      <strong id="liveName">Sarah from Texas</strong>
+      <span id="liveAction">just claimed $500</span>
+    </div>
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      Live
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const people = [
+    { name: "Sarah from Texas", initial: "S" },
+    { name: "Mike from Florida", initial: "M" },
+    { name: "Jessica from Ohio", initial: "J" },
+    { name: "Chris from California", initial: "C" },
+    { name: "Amanda from Georgia", initial: "A" },
+    { name: "David from New York", initial: "D" },
+    { name: "Emily from Arizona", initial: "E" },
+    { name: "Ryan from Illinois", initial: "R" },
+    { name: "Nicole from Michigan", initial: "N" },
+    { name: "Tyler from Nevada", initial: "T" },
+    { name: "Ashley from Colorado", initial: "A" },
+    { name: "Brian from Virginia", initial: "B" },
+    { name: "Megan from Washington", initial: "M" },
+    { name: "Justin from Pennsylvania", initial: "J" },
+    { name: "Lauren from North Carolina", initial: "L" }
+  ];
+
+  const actions = [
+    "just claimed $500",
+    "just started the offer",
+    "just unlocked their reward",
+    "just claimed a gift card",
+    "just completed step 1"
+  ];
+
+  const toast = document.getElementById("liveToast");
+  const nameEl = document.getElementById("liveName");
+  const actionEl = document.getElementById("liveAction");
+  const avatarEl = document.getElementById("liveAvatar");
+
+  let index = 0;
+  let showing = false;
+
+  function showNext() {
+    if (showing) return;
+    showing = true;
+
+    const person = people[index % people.length];
+    const action = actions[Math.floor(Math.random() * actions.length)];
+    index++;
+
+    nameEl.textContent = person.name;
+    actionEl.textContent = action;
+    avatarEl.textContent = person.initial;
+
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+
+    setTimeout(function() {
+      toast.classList.remove("show");
+      toast.classList.add("hide");
+      showing = false;
+    }, 4200);
+  }
+
+  // First notification after a short delay
+  setTimeout(showNext, 1800);
+
+  // Then every 7–11 seconds
+  setInterval(function() {
+    if (!showing) showNext();
+  }, 7500 + Math.random() * 3500);
+})();
+</script>
+</body>
+</html>
